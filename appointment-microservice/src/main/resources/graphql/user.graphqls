@@ -1,0 +1,31 @@
+extend type Query {
+    getUserByEmail(email: String!): UserDTO
+    getUserById(id: ID!): UserDTO
+    getAllUsers(email: String!): [UserDTO]
+}
+
+extend type Mutation {
+    createUser(requestDTO: CreateUserRequestDTOInput!): UserDTO
+    deleteUserById(id: ID!): Boolean
+}
+
+type UserDTO {
+    id: ID!
+    name: String!
+    email: String!
+    type: UserEnum!
+}
+
+input CreateUserRequestDTOInput {
+    name: String!
+    email: String!
+    password: String!
+    type: UserEnum!
+}
+
+enum UserEnum {
+    ADMIN,
+    DOCTOR,
+    NURSER,
+    PATIENT
+}

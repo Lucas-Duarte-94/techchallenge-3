@@ -1,0 +1,34 @@
+scalar DateTime
+
+extend type Query {
+    getAppointmentById(id: ID!, email: String!): AppointmentDTO
+    getSelfAppointments(email: String!): [AppointmentDTO]
+    getAllPatientAppointmentsByEmail(doctorEmail: String!, patientEmail: String!): [AppointmentDTO]
+}
+
+extend type Mutation {
+    createAppointment(appointment: CreateAppointmentDTO!, nurserEmail: String!): AppointmentDTO
+    updateAppointment(doctorEmail: String!, appointment: UpdateAppointmentDTO!): AppointmentDTO
+    deleteAppointment(id: ID!, doctorEmail: String!): Boolean
+}
+
+type AppointmentDTO {
+    id: ID!
+    startDateTime: DateTime!
+    endDateTime: DateTime!
+}
+
+input CreateAppointmentDTO {
+    userId: ID!
+    doctorId: ID!
+    startDateTime: DateTime!
+    endDateTime: DateTime!
+}
+
+input UpdateAppointmentDTO {
+    id: ID!
+    doctorId: ID!
+    startDateTime: DateTime!
+    endDateTime: DateTime!
+    userId: ID!
+}
