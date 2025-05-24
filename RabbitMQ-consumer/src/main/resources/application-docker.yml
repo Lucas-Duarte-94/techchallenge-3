@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: RabbitMQ-consumer
+  rabbitmq:
+    host: ${RABBITMQ_HOST:rabbitmq}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:user}
+    password: ${RABBITMQ_PASSWORD:123456}
+    virtual-host: /
+    connection-timeout: 60000
+    listener:
+      simple:
+        acknowledge-mode: manual
+        retry:
+          enabled: true
+          max-attempts: 3
+        default-requeue-rejected: false
+
+app:
+  rabbitmq:
+    exchange: appointment.exchange
+    routing-key: appointment.notification
+    queue: appointment.notification.queue
+
+server:
+  port: 8081
+
+logging:
+  level:
+    com.yourpackage: DEBUG
+    org.springframework.amqp: DEBUG

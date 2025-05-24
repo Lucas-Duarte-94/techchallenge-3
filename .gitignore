@@ -89,7 +89,6 @@ Thumbs.db
 
 # Spring Boot specific
 **/application-*.properties
-**/application-*.yml
 !**/application.properties
 !**/application.yml
 

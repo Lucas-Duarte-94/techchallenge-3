@@ -1,24 +1,26 @@
 # RabbitMQ-consumer/Dockerfile
 FROM openjdk:21-jdk-slim
 
+# Instalar Maven
+RUN apt-get update && \
+    apt-get install -y maven && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Definir diretório de trabalho
 WORKDIR /app
 
-# Copiar arquivos do Maven
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-
-# Dar permissão de execução ao mvnw
-RUN chmod +x ./mvnw
+# Copiar apenas pom.xml primeiro (para aproveitar cache do Docker)
+COPY pom.xml ./
 
 # Baixar dependências (cache layer)
-RUN ./mvnw dependency:go-offline
+RUN mvn dependency:go-offline -B
 
 # Copiar código fonte
 COPY src ./src
 
 # Compilar aplicação
-RUN ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Encontrar e renomear o JAR para um nome fixo
 RUN cp target/*.jar app.jar
