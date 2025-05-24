@@ -107,3 +107,170 @@ Após executar o `docker-compose up`, os serviços estarão disponíveis em:
 | **Consumer Service** | http://localhost:8081 | Serviço consumidor RabbitMQ |
 | **RabbitMQ Management** | http://localhost:15672 | Interface de gerenciamento RabbitMQ |
 
+### 🖥️ Interface Gráfica
+- **GraphiQL:** `http://localhost:8080/graphiql` (interface web para testes)
+
+### 📋 Schema Disponível
+
+#### **Queries (Consultas)**
+
+##### Consultas de Usuários:
+```graphql
+# Buscar usuário por email
+query {
+  getUserByEmail(email: "user@example.com") {
+    id
+    name
+    email
+    type
+  }
+}
+
+# Buscar usuário por ID
+query {
+  getUserById(id: "1") {
+    id
+    name
+    email
+    type
+  }
+}
+
+# Listar todos os usuários (requer email do solicitante)
+query {
+  getAllUsers(email: "admin@example.com") {
+    id
+    name
+    email
+    type
+  }
+}
+```
+
+##### Consultas de Agendamentos:
+```graphql
+# Buscar agendamento por ID
+query {
+  getAppointmentById(id: "1", email: "user@example.com") {
+    id
+    startDateTime
+    endDateTime
+  }
+}
+
+# Buscar próprios agendamentos
+query {
+  getSelfAppointments(email: "patient@example.com") {
+    id
+    startDateTime
+    endDateTime
+  }
+}
+
+# Buscar agendamentos de um paciente específico (para médicos)
+query {
+  getAllPatientAppointmentsByEmail(
+    doctorEmail: "doctor@example.com",
+    patientEmail: "patient@example.com"
+  ) {
+    id
+    startDateTime
+    endDateTime
+  }
+}
+```
+
+#### **Mutations (Modificações)**
+
+##### Operações de Usuários:
+```graphql
+# Criar novo usuário
+mutation {
+  createUser(requestDTO: {
+    name: "João Silva"
+    email: "joao@example.com"
+    password: "senha123"
+    type: PATIENT
+  }) {
+    id
+    name
+    email
+    type
+  }
+}
+
+# Deletar usuário
+mutation {
+  deleteUserById(id: "1")
+}
+```
+
+##### Operações de Agendamentos:
+```graphql
+# Criar agendamento
+mutation {
+  createAppointment(
+    appointment: {
+      userId: "1"
+      doctorId: "2"
+      startDateTime: "2024-01-15T09:00:00"
+      endDateTime: "2024-01-15T10:00:00"
+    },
+    nurserEmail: "nurse@example.com"
+  ) {
+    id
+    startDateTime
+    endDateTime
+  }
+}
+
+# Atualizar agendamento
+mutation {
+  updateAppointment(
+    doctorEmail: "doctor@example.com",
+    appointment: {
+      id: "1"
+      doctorId: "2"
+      userId: "3"
+      startDateTime: "2024-01-15T14:00:00"
+      endDateTime: "2024-01-15T15:00:00"
+    }
+  ) {
+    id
+    startDateTime
+    endDateTime
+  }
+}
+
+# Deletar agendamento
+mutation {
+  deleteAppointment(id: "1", doctorEmail: "doctor@example.com")
+}
+```
+
+### 🧪 Exemplos de Requisições HTTP
+
+#### Usando Postman/Insomnia:
+```json
+{
+  "query": "query { getUserByEmail(email: \"user@example.com\") { id name email type } }"
+}
+```
+
+```json
+{
+  "query": "mutation { createAppointment(appointment: { userId: \"1\", doctorId: \"2\", startDateTime: \"2024-01-15T09:00:00\", endDateTime: \"2024-01-15T10:00:00\" }, nurserEmail: \"nurse@example.com\") { id startDateTime endDateTime } }"
+}
+```
+
+### 📊 Tipos de Dados
+
+#### **UserEnum:**
+- `ADMIN` - Administrador do sistema
+- `DOCTOR` - Médico
+- `NURSER` - Enfermeiro
+- `PATIENT` - Paciente
+
+#### **DateTime:**
+- Formato: ISO 8601 (`YYYY-MM-DDTHH:mm:ss`)
+- Exemplo: `"2024-01-15T09:00:00"`
