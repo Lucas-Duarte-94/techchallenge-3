@@ -4,5 +4,6 @@
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/RabbitMQ-consumer" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/appointment-microservice" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/clone test/techchallenge-3" vcs="Git" />
   </component>
 </project>
